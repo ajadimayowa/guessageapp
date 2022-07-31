@@ -3,7 +3,7 @@ import { View, TextInput, Text, Pressable, StyleSheet } from "react-native";
 
 function PrimaryButton({ children }) {
     function buttonPressed() {
-        console.log('Primary button pressed')
+        console.log(children, 'Button pressed')
     }
 
 

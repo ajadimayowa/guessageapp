@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, TextInput, Text, Pressable, StyleSheet } from "react-native";
 
-function NumberInput(props) {
+function NumberInput({ children }) {
     const [enteredNumber, setEnteredNumber] = useState('')
     const [noInputPlaceholder, setnoInputPlaceholder] = useState('white')
 

@@ -1,30 +1,33 @@
 import { useState } from "react";
-import { View, TextInput, Text, Pressable, StyleSheet } from "react-native";
+import { View, TextInput, Text, Pressable, StyleSheet, Alert } from "react-native";
 import PrimaryButton from "../Components/PrimaryButton";
 
-function StartGameScreen(props) {
-    const [enteredNumber, setEnteredNumber] = useState('')
+function StartGameScreen({ onNumberPicked }) {
+    const [enteredNumber, setEnteredNumber] = useState('');
+    const [userInputAge, setUserInputAge] = useState();
+
 
     function catchInputNumber(inputNumber) {
-        setEnteredNumber(inputNumber)
+
+        if (inputNumber <= 0 || isNaN(enteredNumber)) {
+            Alert.alert('Invalid Input', 'Your input must be less than 90 and an integer',
+                [{ text: 'Ok', style: 'destructive' }])
+            setEnteredNumber('')
+        } else {
+            setEnteredNumber(inputNumber);
+            setUserInputAge(parseInt(inputNumber))
+        }
+
+    }
+
+    function resetInput() {
+        setEnteredNumber('')
     }
 
 
 
-    function passUserInput() {
-
-        if (enteredNumber != '') {
-            setnoInputPlaceholder('white')
-            props.catchUserInput(enteredNumber)
-            props.togglePassed()
-            setnoInputPlaceholder('yellow')
-            setEnteredNumber('')
-        }
-        else {
-            console.log('No Age Entered')
-            setnoInputPlaceholder('grey')
-        }
-
+    function passUserInputAsInt() {
+        onNumberPicked(userInputAge)
     }
 
     return (
@@ -35,8 +38,8 @@ function StartGameScreen(props) {
                 autoCapitalize='none'
                 autoCorrect={false} />
             <View style={styles.buttonsContainer}>
-                <PrimaryButton>Reset</PrimaryButton>
-                <PrimaryButton>Confirm</PrimaryButton>
+                <PrimaryButton onPress={resetInput} >Reset</PrimaryButton>
+                <PrimaryButton onPress={passUserInputAsInt}>Confirm</PrimaryButton>
 
             </View>
         </View>
@@ -48,7 +51,6 @@ const styles = StyleSheet.create({
 
     container: {
         backgroundColor: '#FFFFFF',
-        paddingVertical: 50,
         paddingHorizontal: 50,
         alignItems: 'center',
         justifyContent: 'center',
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 3 },
         shadowRadius: 6,
         shadowOpacity: 0.3,
-        elevation: 4
+        elevation: 4,
     },
     input: {
         height: 45,

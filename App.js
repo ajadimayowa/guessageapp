@@ -2,21 +2,32 @@ import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ImageBackground } from 'react-native';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import NumberInput from './Components/NumberInput';
 import PreviousGuess from './Components/PreviousGuess';
 import PassedModal from './Components/PassModal';
 import StartGameScreen from './screens/StartGameScreen';
+import GameScreen from './screens/GameScreen';
 
 export default function App() {
   const [guesses, updateGuesses] = useState([])
   const [passmodal, setpassmodal] = useState(false)
+  const [ageInput, setAgeInput] = useState()
 
-  function catchUserInput(input) {
-    updateGuesses((oldlist) =>
-      [...oldlist, { number: input }]
-    )
+  let screen = <StartGameScreen onNumberPicked={catchAgeInput} />
 
+  function catchAgeInput(inputValue) {
+    setAgeInput(inputValue)
+  }
+
+  function backToHome() {
+    setAgeInput()
+  }
+
+
+
+  if (ageInput) {
+    screen = <GameScreen userNumber={ageInput} backHome={backToHome} buttonStyle={styles.button} />
   }
 
   function togglePassed() {
@@ -24,12 +35,17 @@ export default function App() {
 
   }
 
+
+
   return (
-    <LinearGradient colors={['#2AB858', 'white']} style={styles.container}>
+    <LinearGradient colors={['#2AB858', 'blue']} style={styles.container}>
       <ImageBackground source={require('./assets/images/guessappbg.png')} resizeMode='cover'
         style={styles.container} imageStyle={styles.imageBackground}>
-        <StartGameScreen />
+        <SafeAreaView style={styles.container}>
 
+          {screen}
+
+        </SafeAreaView >
         <StatusBar style="auto" />
       </ImageBackground>
     </LinearGradient >
@@ -42,10 +58,11 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor: '#2AB858'
-
   },
   imageBackground: {
     opacity: 0.6
+  },
+  button: {
+    backgroundColor: 'red'
   }
 });

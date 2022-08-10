@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, TextInput, Text, Pressable, StyleSheet } from "react-native";
 
-function PrimaryButton({ children }) {
+function PrimaryButton({ children, onPress, style }) {
     function buttonPressed() {
         console.log(children, 'Button pressed')
     }
@@ -10,7 +10,8 @@ function PrimaryButton({ children }) {
     return (
 
 
-        <Pressable android_ripple={true} style={({ pressed }) => pressed ? [styles.tapEffect, styles.testStyle] : styles.buttonStyle} onPress={buttonPressed}>
+        <Pressable android_ripple={true} style={({ pressed }) => pressed ? [styles.tapEffect, styles.testStyle] : [styles.buttonStyle, style]}
+            onPress={onPress}>
             <View style={styles.button}>
                 <Text style={styles.text}>{children}</Text>
             </View>

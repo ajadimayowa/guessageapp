@@ -1,11 +1,61 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useFonts } from 'expo-font';
+import AppLoading from 'expo-app-loading';
+import { useEffect } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, Alert, ImageBackground } from 'react-native';
+import Home from './screens/Home';
+import GameOverScreen from './screens/GameOverScreen';
+import GameScreen from './screens/GameScreen'
+import { useState } from 'react';
+
 
 export default function App() {
+  const [userNumber, setUserNumber] = useState()
+  const [correctGuess, setCorrectGuess] = useState()
+
+  const [fontLoading] = useFonts({
+    'montserat-bold': require('./assets/fonts/Montserrat-Bold.otf'),
+
+  })
+
+  if (!fontLoading) {
+    return <AppLoading />
+  }
+
+  let screen = <Home catchUserNumber={catchUserNumber} />
+
+  function endGame(correctguess) {
+    setCorrectGuess(correctguess)
+    setUserNumber()
+  }
+
+  function startNewGame() {
+    setCorrectGuess()
+    setUserNumber()
+  }
+
+  function catchUserNumber(theInputAge) {
+    setUserNumber(theInputAge)
+    console.log(theInputAge)
+  }
+
+  if (userNumber) {
+    screen = <GameScreen userAge={userNumber} endGame={endGame} newGame={startNewGame} />
+  }
+  if (!userNumber && correctGuess) {
+    screen = <GameOverScreen correctGuess={correctGuess} startNewGame={startNewGame} />
+  }
+
+
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <ImageBackground style={styles.container} source={require('./assets/images/bg-image.png')}>
+        <SafeAreaView style={styles.container}>
+          {screen}
+          <StatusBar style="dark" />
+        </SafeAreaView>
+      </ImageBackground>
     </View>
   );
 }
@@ -13,7 +63,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },

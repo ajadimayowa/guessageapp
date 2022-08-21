@@ -1,4 +1,8 @@
-import { View, Text, StyleSheet, Alert, FlatList, ScrollView, SafeAreaView } from "react-native";
+import {
+    View, Text, StyleSheet, Alert, FlatList, SafeAreaView,
+    ScrollView, useWindowDimensions
+}
+    from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
 import Header from "../components/Header";
 import { useEffect, useState } from "react";
@@ -8,8 +12,12 @@ import ScrollHeader from '../components/ScrollHeader';
 
 let min = 1
 let max = 100
+// let deviceHeight = Dimensions.get('window').height
+// let deviceWidth = Dimensions.get('window').width
 
 function GameScreen({ endGame, userAge, newGame }) {
+    const { width, height } = useWindowDimensions()
+
 
 
     function generateNumber(max, min, exclude) {
@@ -63,39 +71,49 @@ function GameScreen({ endGame, userAge, newGame }) {
         setGuessList((currentGuess) => [nextGuess, ...currentGuess])
     }
 
+    const deviceResponseColor = width > 500 ? 'green' : 'red';
+    const deviceResponseSize = width > 500 ? '90%' : 400;
+
     return (
+
         <SafeAreaView style={styles.container}>
+            <ScrollView contentContainerStyle={{ alignItems: 'center' }} bounces={false} style={{ flex: 1, width: '100%', }}>
+                <Header style={[styles.displayStyle, { backgroundColor: deviceResponseColor, maxWidth: deviceResponseSize }]}>
+                    <Text style={styles.titleText}>
+                        Your Age is
+                    </Text>
+                    <Text style={styles.largeText}>
+                        {guessedAge}
+                    </Text>
 
-            <Header style={styles.displayStyle}>
+                </Header>
                 <Text style={styles.titleText}>
-                    Your Age is
+                    Close enough?
                 </Text>
-                <Text style={styles.largeText}>
-                    {guessedAge}
-                </Text>
+                <View style={{ flexDirection: 'row' }}>
+                    <PrimaryButton style={styles.buttonStyles} action={nextGuess.bind(this, 'higher')}>
+                        <Text style={styles.buttonText}> <Ionicons name="md-arrow-up" />Go Higher</Text></PrimaryButton>
+                    <PrimaryButton style={styles.buttonStylesPositive} action={nextGuess.bind(this, 'lower')}>
+                        <Text style={styles.buttonText}><Ionicons name="md-arrow-down" /> Go Lower</Text></PrimaryButton>
 
-            </Header>
-            <Text style={styles.titleText}>
-                Close enough?
-            </Text>
-            <View style={{ flexDirection: 'row' }}>
-                <PrimaryButton style={styles.buttonStyles} action={nextGuess.bind(this, 'higher')}>
-                    <Text style={styles.buttonText}> <Ionicons name="md-arrow-up" />Go Higher</Text></PrimaryButton>
-                <PrimaryButton style={styles.buttonStylesPositive} action={nextGuess.bind(this, 'lower')}>
-                    <Text style={styles.buttonText}><Ionicons name="md-arrow-down" /> Go Lower</Text></PrimaryButton>
+                </View>
 
-            </View>
+                <View style={{ alignItems: 'flex-start', width: deviceResponseSize, paddingHorizontal: 10 }}>
+                    <ScrollHeader />
+                </View>
+                <View style={{ width: deviceResponseSize, paddingHorizontal: 10, backgroundColor: 'green' }}>
+                    <FlatList horizontal={true} data={guessList} renderItem={(guesses) => <GuessHolder
+                        guess={guesses.item} number={guesses.index + 1} />} />
+                </View>
 
-
-            <FlatList showsVerticalScrollIndicator={false} style={styles.listStyles} data={guessList} renderItem={(guesses) => <GuessHolder
-                guess={guesses.item} number={guesses.index + 1} />} />
-            {/* <ScrollView showsVerticalScrollIndicator={false} StickyHeaderComponent={<ScrollHeader />}>
+                {/* <ScrollView showsVerticalScrollIndicator={false} StickyHeaderComponent={<ScrollHeader />}>
 
                 {guessList.map((guess) => <GuessHolder key={guess}>{guess}</GuessHolder>)}
             </ScrollView> */}
 
-            <PrimaryButton style={styles.buttonStylesExit} action={newGame}>
-                <Text style={styles.buttonText}><Ionicons name="md-home" /> End game</Text></PrimaryButton>
+                <PrimaryButton style={styles.buttonStylesExit} action={newGame}>
+                    <Text style={styles.buttonText}><Ionicons name="md-home" /> End game</Text></PrimaryButton>
+            </ScrollView>
         </SafeAreaView>
     )
 }
@@ -103,19 +121,21 @@ function GameScreen({ endGame, userAge, newGame }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         width: '100%',
         alignItems: 'center',
         paddingVertical: 20
     },
-    listStyles: {
-        backgroundColor: 'yellow',
-        width: '100%',
-        minHeight: 200,
-        padding: 5
-    },
     displayStyle: {
-        backgroundColor: 'purple'
+        maxWidth: '20%',
+    },
+    listContentStyles: {
+        backgroundColor: 'green',
+        flexGrow: 1,
+        alignItems: 'flex-start',
+
+        minWidth: '90%',
+        padding: 20
+
     },
     buttonText: {
         color: 'white',

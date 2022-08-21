@@ -7,21 +7,19 @@ function ScrollHeader({ children }) {
 
     return (
         <View style={[styles.container]}>
-            <Text style={styles.titleText}>Your Guesses</Text>
+            <Text style={styles.titleText}>Your Previous Guesses</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'blue',
+        backgroundColor: 'orange',
         padding: 10,
-        minWidth: '75%',
-        minHeight: 40,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 5,
-        margin: 5
+
+
     },
     titleText: {
         fontFamily: 'montserat-bold',

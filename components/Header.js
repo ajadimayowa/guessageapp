@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, ImageBackground, Platform } from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
 import InputField from "./InputField";
 import { Ionicons } from "@expo/vector-icons"
@@ -17,7 +17,8 @@ function Header({ children, style }) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'yellow',
+        backgroundColor: Platform.OS === 'ios' ? 'yellow' : 'red',
+        // backgroundColor: Platform.select({ ios: 'green', android: 'red' }),
         padding: 40,
         minWidth: '75%',
         minHeight: 170,

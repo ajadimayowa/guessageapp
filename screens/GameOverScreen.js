@@ -1,4 +1,7 @@
-import { View, Text, StyleSheet, Alert } from "react-native";
+import {
+    View, Text, StyleSheet, Alert, Image,
+    useWindowDimensions, ScrollView
+} from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
 import Header from "../components/Header";
 import { Ionicons } from "@expo/vector-icons"
@@ -7,11 +10,15 @@ function GameOverScreen({ correctGuess, startNewGame }) {
     function restartGame() {
         startNewGame()
     }
+    const { width } = useWindowDimensions()
 
-    return (
-        <View style={styles.container}>
+    let content = (
+        <>
+
+            <Image resizeMode="contain" style={[styles.imageStyle]}
+                source={require('../assets/images/gameover-image.png')} />
             <Text style={styles.titleText}>
-                Game Over!!! Your Age is
+                Your Age is
             </Text>
             <Header style={styles.displayStyle}>
                 <Text style={styles.largeText}>
@@ -19,20 +26,57 @@ function GameOverScreen({ correctGuess, startNewGame }) {
                 </Text>
 
             </Header>
+
+
             <PrimaryButton action={restartGame} style={styles.buttonStylesExit}>
                 <Text style={styles.buttonText}><Ionicons name="md-home" />Restart</Text></PrimaryButton>
-        </View>
+        </>)
+    if (width > 500) {
+        let displayWidth = 300
+        content = (
+            <>
+                <Image resizeMode="contain" style={[styles.imageStyle, {
+                    width: 100, height: 100,
+                    borderRadius: 50
+                }]}
+                    source={require('../assets/images/gameover-image.png')} />
+                <Header style={[styles.displayStyle, { minWidth: displayWidth }]}>
+                    <Text style={styles.titleText}>
+                        Your Age is
+                    </Text>
+                    <Text style={styles.largeText}>
+                        {correctGuess}
+                    </Text>
+
+                </Header>
+                <PrimaryButton action={restartGame} style={styles.buttonStylesExit}>
+                    <Text style={styles.buttonText}><Ionicons name="md-home" />Restart</Text></PrimaryButton>
+            </>
+        )
+    }
+
+    return (
+        <ScrollView contentContainerStyle={styles.container} style={{ flex: 1 }}>
+            {content}
+        </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         width: '100%',
         alignItems: 'center',
         paddingVertical: 50,
         justifyContent: 'center'
+    },
+    imageStyle: {
+        margin: 10,
+        backgroundColor: 'blue',
+        maxHeight: 150,
+        maxWidth: 150,
+        borderRadius: 80,
+        padding: 40
     },
     displayStyle: {
         backgroundColor: 'purple'
